@@ -1,0 +1,8 @@
+prefix=/home/yashwant/y_ws/devel
+
+Name: sensor_msgs
+Description: Description of sensor_msgs
+Version: 1.12.5
+Cflags: -I/home/yashwant/y_ws/devel/include -I/home/yashwant/y_ws/src/common_msgs-jade-devel/sensor_msgs/include
+Libs: -L/home/yashwant/y_ws/devel/lib 
+Requires: geometry_msgs message_runtime std_msgs

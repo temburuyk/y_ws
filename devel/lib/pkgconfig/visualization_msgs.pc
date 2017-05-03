@@ -1,0 +1,8 @@
+prefix=/home/yashwant/y_ws/devel
+
+Name: visualization_msgs
+Description: Description of visualization_msgs
+Version: 1.12.5
+Cflags: -I/home/yashwant/y_ws/devel/include
+Libs: -L/home/yashwant/y_ws/devel/lib 
+Requires: geometry_msgs message_runtime std_msgs
