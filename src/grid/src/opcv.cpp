@@ -134,7 +134,6 @@ gridmap_pub.publish(m);
 
 int main(int argc, char **argv)
 {
-part of the ROS system.
   
   ros::init(argc, argv, "grid");
 

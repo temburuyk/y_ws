@@ -132,6 +132,7 @@ IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   INCLUDE("/home/yashwant/y_ws/build/path_planning/cmake_install.cmake")
   INCLUDE("/home/yashwant/y_ws/build/grid/cmake_install.cmake")
   INCLUDE("/home/yashwant/y_ws/build/cv_bridge/cmake_install.cmake")
+  INCLUDE("/home/yashwant/y_ws/build/urg_node-indigo-devel/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 

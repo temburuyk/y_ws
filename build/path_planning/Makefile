@@ -149,12 +149,51 @@ depend:
 	cd /home/yashwant/y_ws/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+# Convenience name for target.
+path_planning/CMakeFiles/astar_start.dir/rule:
+	cd /home/yashwant/y_ws/build && $(MAKE) -f CMakeFiles/Makefile2 path_planning/CMakeFiles/astar_start.dir/rule
+.PHONY : path_planning/CMakeFiles/astar_start.dir/rule
+
+# Convenience name for target.
+astar_start: path_planning/CMakeFiles/astar_start.dir/rule
+.PHONY : astar_start
+
+# fast build rule for target.
+astar_start/fast:
+	cd /home/yashwant/y_ws/build && $(MAKE) -f path_planning/CMakeFiles/astar_start.dir/build.make path_planning/CMakeFiles/astar_start.dir/build
+.PHONY : astar_start/fast
+
+src/astar_start.o: src/astar_start.cpp.o
+.PHONY : src/astar_start.o
+
+# target to build an object file
+src/astar_start.cpp.o:
+	cd /home/yashwant/y_ws/build && $(MAKE) -f path_planning/CMakeFiles/astar_start.dir/build.make path_planning/CMakeFiles/astar_start.dir/src/astar_start.cpp.o
+.PHONY : src/astar_start.cpp.o
+
+src/astar_start.i: src/astar_start.cpp.i
+.PHONY : src/astar_start.i
+
+# target to preprocess a source file
+src/astar_start.cpp.i:
+	cd /home/yashwant/y_ws/build && $(MAKE) -f path_planning/CMakeFiles/astar_start.dir/build.make path_planning/CMakeFiles/astar_start.dir/src/astar_start.cpp.i
+.PHONY : src/astar_start.cpp.i
+
+src/astar_start.s: src/astar_start.cpp.s
+.PHONY : src/astar_start.s
+
+# target to generate assembly for a file
+src/astar_start.cpp.s:
+	cd /home/yashwant/y_ws/build && $(MAKE) -f path_planning/CMakeFiles/astar_start.dir/build.make path_planning/CMakeFiles/astar_start.dir/src/astar_start.cpp.s
+.PHONY : src/astar_start.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... astar_start"
 	@echo "... edit_cache"
 	@echo "... install"
 	@echo "... install/local"
@@ -162,6 +201,9 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
+	@echo "... src/astar_start.o"
+	@echo "... src/astar_start.i"
+	@echo "... src/astar_start.s"
 .PHONY : help
 
 
