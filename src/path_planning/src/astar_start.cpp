@@ -35,24 +35,11 @@ float f,g,h;
     //parent=NULL;
   }
 };
-/*node *least_f_node(list<node*> &l)
-{
-  node  *current;
-  for(list<node*>::iterator listIterator = l.begin();
-    listIterator != l.end();listIterator++)
-  {
-    if(((*listIterator)->x==(l.begin())->x)&&((*listIterator)->y==(l.begin())->y)||(*listIterator)->f<current->f)
-    {
-      current=(*listIterator);
-    }
-  }
-  return current;
-}*/
 void path_plan(nav_msgs::OccupancyGrid msg)
 {
   //nav_msgs::OccupancyGrid obstacle_map,int s_x, int s_y,int d_x, int d_y
-  //cout<<"path_start"<<endl;
-  int s_x=1; int s_y=1;int d_x=4; int d_y=5;
+  cout<<"path_start                                     here"<<endl;
+  int s_x=11; int s_y=11;;int d_x=30; int d_y=34;
   int height=msg.info.height;int width=msg.info.width;
    nav_msgs::OccupancyGrid obstacle_map;
     obstacle_map.header.stamp = ros::Time::now();
@@ -76,7 +63,7 @@ void path_plan(nav_msgs::OccupancyGrid msg)
         }
     }
 
-    ////cout<<"2"<<endl;
+    //cout<<"2"<<endl;
 
   list<node*> open_nodes;
   list<node*> closed_nodes;
@@ -85,108 +72,111 @@ void path_plan(nav_msgs::OccupancyGrid msg)
   start->x=s_x;
   start->y=s_y;
   start->g=0;
-  start->h=round(sqrt((s_x - d_x)^2+(s_y - d_y)^2)*10);
+  int initial_h=round(sqrt(pow((s_x - d_x),2)+pow((s_y - d_y),2)*10));
+  start->h=initial_h;
   start->f=0;
   open_nodes.push_back(start);
-  //cout<<"open nodes size "<<open_nodes.size()<<endl;
   int count=0;
+  node *before_c;
+  before_c=start;
   while(!open_nodes.empty())
   {
    node  *current;
-   current = new node;
-  for(list<node*>::iterator listIterator = open_nodes.begin();
-    listIterator != open_nodes.end();listIterator++)
-  {
-    if(((listIterator)==(open_nodes.begin()))||(*listIterator)->f<current->f)
+   //current = new node;
+   cout<<"present current x and y "<<before_c->x<<" "<<before_c->y<<endl;
+   cout<<"present current g h and f value "<<before_c->g<<" "<<before_c->h<<" "<<before_c->f<<endl;
+    for(list<node*>::iterator listIterator = open_nodes.begin();
+      listIterator != open_nodes.end();listIterator++)
     {
-      current=(*listIterator);
+      if(((listIterator)==(open_nodes.begin()))||(*listIterator)->f<current->f)
+      {
+        current=(*listIterator);
+      }
     }
-  }
+    cout<<"after update current x and y "<<current->x<<" "<<current->y<<endl;
+    cout<<"after update current g h and f value "<<current->g<<" "<<current->h<<" "<<current->f<<endl;
     open_nodes.remove(current);
+    cout<<"open nodes size "<<open_nodes.size()<<endl;
     for(int i=-1;i<2;i++)
     {
       for(int j=-1;j<2;j++)
       {
-        ////cout<<j<<" "<<i<<endl;
+        //cout<<j<<" "<<i<<endl;
         node *successor;
         successor = new node;
         successor->parent=current;
         int n_x,n_y=0;
         n_x=current->x+j;
         n_y=current->y+i;
-        if(n_x>=0&&n_y>=0)
+        if(n_x>=0&&n_y>=0&&n_x<height&&n_y<width)
         {
           float dis_parent,dis_goal;
-        dis_parent=sqrt(i^2+j^2)*10;
-        dis_goal=sqrt((n_x-d_x)^2+(n_y-d_y)^2)*10;
-        successor->x=n_x;
-        successor->y=n_y;
-        successor->g=round(current->g+dis_parent);
-        successor->h=round(dis_goal);
-        successor->f=successor->h+successor->g;
-        if(n_x==d_x&&n_y==d_y)
-        {
-          closed_nodes.push_back(current);
-          closed_nodes.push_back(successor);
-          goto endloop;
-        }
-        ////cout<<"che1"<<endl;
-        ////cout<<open_nodes.size()<<endl;
-        if(count>0)
-        {
-          ////cout<<"che"<<endl;
-          for(list<node*>::iterator listIterator = open_nodes.begin();
-            listIterator != open_nodes.end();listIterator++)
+          dis_parent=sqrt(pow(i,2)+pow(j,2))*10;
+          dis_goal=sqrt(pow((n_x-d_x),2)+pow((n_y-d_y),2))*10;
+          successor->x=n_x;
+          successor->y=n_y;
+          successor->g=round(current->g+dis_parent);
+          successor->h=round(dis_goal);
+          successor->f=successor->h+successor->g;
+          cout<<"successor g h and f value "<<successor->g<<" "<<successor->h<<" "<<successor->f<<endl;
+          cout<<"successor x and y "<<successor->x<<" "<<successor->y<<endl;
+          if(n_x==d_x&&n_y==d_y)
           {
-            ////cout<<current->x<<endl;
-            ////cout<<successor->x<<endl;
-            if(current->x==successor->x&&current->y==successor->y&&current->f<successor->f)
-            {
-              goto start_explore;
-            }
-          } 
-          for(list<node*>::iterator listIterator = closed_nodes.begin();
-            listIterator != closed_nodes.end();listIterator++)
-            ////cout<<current->x<<endl;
-          ////cout<<successor->x<<endl;
+            closed_nodes.push_back(current);
+            closed_nodes.push_back(successor);
+            goto endloop;
+          }
+          if(count>0)
           {
-            if(current->x==successor->x&&current->y==successor->y&&current->f<successor->f)
+            for(list<node*>::iterator listIterator = open_nodes.begin();
+              listIterator != open_nodes.end();listIterator++)
             {
-              goto start_explore;
+              if(current->x==successor->x&&current->y==successor->y&&current->f<=successor->f)
+              {
+                cout<<"going to start explore"<<endl;
+                goto start_explore;
+              }
+            } 
+            for(list<node*>::iterator listIterator = closed_nodes.begin();
+              listIterator != closed_nodes.end();listIterator++)
+            {
+              if(current->x==successor->x&&current->y==successor->y&&current->f<=successor->f)
+              {
+                cout<<"going to start explore"<<endl;
+                goto start_explore;
+              }
             }
           }
-        }
-        ////cout<<"che2"<<endl;
-        open_nodes.push_back(successor);
-        count++;
-        ////cout<<"che4"<<endl;
-        start_explore:;
-        //cout<<"came to start explore"<<endl;
-        //cout<<"count value "<<count<<endl;
+          open_nodes.push_back(successor);
+          count++;
+          start_explore:;
+          cout<<"count value "<<count<<endl;
         }
       }
     }
-    //cout<<"succesor_out"<<endl;
+    cout<<"successor_out"<<endl;
+    cout<<"closed_nodes size"<<closed_nodes.size()<<endl;
     closed_nodes.push_back(current);
+    before_c=current;
   }
   endloop: ;
 
-  //cout<<"closed nodes size "<<closed_nodes.size()<<endl;
-  //cout<<"destination_reached"<<endl;
+  cout<<"closed nodes size "<<closed_nodes.size()<<endl;
+  cout<<"destination_reached"<<endl;
   //cout<<"closed_nodes parents exploring ";
   /*for(list<node*>::iterator listIterator = closed_nodes.begin();
     listIterator != closed_nodes.end();listIterator++)
   {
-    //cout<<(*listIterator)->x<<(*listIterator)->y<<" ";
+    cout<<(*listIterator)->x<<(*listIterator)->y<<" ";
   }
-  //cout<<endl;
-  //cout<<"closed_nodes parents exploring ";
+  cout<<endl;
+  cout<<"closed_nodes parents exploring ";
   for(list<node*>::iterator listIterator = closed_nodes.begin();
     listIterator != closed_nodes.end();listIterator++)
   {
-    //cout<<(*listIterator)->parent->x<<(*listIterator)->parent->y<<" ";
+    cout<<(*listIterator)->parent->x<<(*listIterator)->parent->y<<" ";
   }
-  //cout<<endl;*/
+  cout<<endl;*/
     
   node *destination_node;
   //destination_node = new node;
@@ -236,7 +226,7 @@ int main(int argc, char **argv)
    * A count of how many messages we have sent. This is used to create
    * a unique string for each message.
    */
-   //cout<<"1"<<endl;
+   cout<<"1"<<endl;
     ros::NodeHandle n1;
     ros::Subscriber path_sub=n1.subscribe<nav_msgs::OccupancyGrid>("/scan/local_map",25,path_plan);
    //path_plan(obstacle_map,1,1,3,2);

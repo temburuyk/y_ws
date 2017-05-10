@@ -25,8 +25,8 @@ const int side_in_cm = 30;
 const int base_lidar_dist = 50;   //distance from vehicle centre to lidar in cm(only in y-direction)
 
 const int cam_lidar_dist = 50;    //distance from camera to lidar in cm
-const int width = 500;//map size
-const int height = 500;
+const int width = 250;//map size
+const int height = 250;
 const int range = 200;//10m in cells
 int l_width,l_height;//lane map size          
 
