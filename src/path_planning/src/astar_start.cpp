@@ -32,6 +32,7 @@ float f,g,h;
     f=0;
     g=0;
     h=0;
+    //parent=NULL;
   }
 };
 /*node *least_f_node(list<node*> &l)
@@ -50,8 +51,8 @@ float f,g,h;
 void path_plan(nav_msgs::OccupancyGrid msg)
 {
   //nav_msgs::OccupancyGrid obstacle_map,int s_x, int s_y,int d_x, int d_y
-  cout<<"path_start"<<endl;
-  int s_x=1; int s_y=1;int d_x=2; int d_y=3;
+  //cout<<"path_start"<<endl;
+  int s_x=1; int s_y=1;int d_x=4; int d_y=5;
   int height=msg.info.height;int width=msg.info.width;
    nav_msgs::OccupancyGrid obstacle_map;
     obstacle_map.header.stamp = ros::Time::now();
@@ -75,7 +76,7 @@ void path_plan(nav_msgs::OccupancyGrid msg)
         }
     }
 
-    //cout<<"2"<<endl;
+    ////cout<<"2"<<endl;
 
   list<node*> open_nodes;
   list<node*> closed_nodes;
@@ -87,7 +88,7 @@ void path_plan(nav_msgs::OccupancyGrid msg)
   start->h=round(sqrt((s_x - d_x)^2+(s_y - d_y)^2)*10);
   start->f=0;
   open_nodes.push_back(start);
-  cout<<"open nodes size "<<open_nodes.size()<<endl;
+  //cout<<"open nodes size "<<open_nodes.size()<<endl;
   int count=0;
   while(!open_nodes.empty())
   {
@@ -106,14 +107,16 @@ void path_plan(nav_msgs::OccupancyGrid msg)
     {
       for(int j=-1;j<2;j++)
       {
-        //cout<<j<<" "<<i<<endl;
+        ////cout<<j<<" "<<i<<endl;
         node *successor;
         successor = new node;
         successor->parent=current;
         int n_x,n_y=0;
         n_x=current->x+j;
         n_y=current->y+i;
-        float dis_parent,dis_goal;
+        if(n_x>=0&&n_y>=0)
+        {
+          float dis_parent,dis_goal;
         dis_parent=sqrt(i^2+j^2)*10;
         dis_goal=sqrt((n_x-d_x)^2+(n_y-d_y)^2)*10;
         successor->x=n_x;
@@ -127,16 +130,16 @@ void path_plan(nav_msgs::OccupancyGrid msg)
           closed_nodes.push_back(successor);
           goto endloop;
         }
-        //cout<<"che1"<<endl;
-        //cout<<open_nodes.size()<<endl;
+        ////cout<<"che1"<<endl;
+        ////cout<<open_nodes.size()<<endl;
         if(count>0)
         {
-          //cout<<"che"<<endl;
+          ////cout<<"che"<<endl;
           for(list<node*>::iterator listIterator = open_nodes.begin();
             listIterator != open_nodes.end();listIterator++)
           {
-            //cout<<current->x<<endl;
-            //cout<<successor->x<<endl;
+            ////cout<<current->x<<endl;
+            ////cout<<successor->x<<endl;
             if(current->x==successor->x&&current->y==successor->y&&current->f<successor->f)
             {
               goto start_explore;
@@ -144,8 +147,8 @@ void path_plan(nav_msgs::OccupancyGrid msg)
           } 
           for(list<node*>::iterator listIterator = closed_nodes.begin();
             listIterator != closed_nodes.end();listIterator++)
-            //cout<<current->x<<endl;
-          //cout<<successor->x<<endl;
+            ////cout<<current->x<<endl;
+          ////cout<<successor->x<<endl;
           {
             if(current->x==successor->x&&current->y==successor->y&&current->f<successor->f)
             {
@@ -153,38 +156,69 @@ void path_plan(nav_msgs::OccupancyGrid msg)
             }
           }
         }
-        //cout<<"che2"<<endl;
+        ////cout<<"che2"<<endl;
         open_nodes.push_back(successor);
         count++;
-        //cout<<"che4"<<endl;
+        ////cout<<"che4"<<endl;
         start_explore:;
-        cout<<"came to start explore"<<endl;
-        cout<<"count value "<<count<<endl;
+        //cout<<"came to start explore"<<endl;
+        //cout<<"count value "<<count<<endl;
+        }
       }
     }
-    cout<<"succesor_out"<<endl;
+    //cout<<"succesor_out"<<endl;
     closed_nodes.push_back(current);
   }
   endloop: ;
 
-  cout<<"closed nodes size "<<closed_nodes.size()<<endl;
-  cout<<"destination_reached"<<endl;
+  //cout<<"closed nodes size "<<closed_nodes.size()<<endl;
+  //cout<<"destination_reached"<<endl;
+  //cout<<"closed_nodes parents exploring ";
+  /*for(list<node*>::iterator listIterator = closed_nodes.begin();
+    listIterator != closed_nodes.end();listIterator++)
+  {
+    //cout<<(*listIterator)->x<<(*listIterator)->y<<" ";
+  }
+  //cout<<endl;
+  //cout<<"closed_nodes parents exploring ";
+  for(list<node*>::iterator listIterator = closed_nodes.begin();
+    listIterator != closed_nodes.end();listIterator++)
+  {
+    //cout<<(*listIterator)->parent->x<<(*listIterator)->parent->y<<" ";
+  }
+  //cout<<endl;*/
+    
   node *destination_node;
-  destination_node = new node;
+  //destination_node = new node;
   destination_node=closed_nodes.back();
   cout<<"path_trace ";
   cout<<destination_node->x<<destination_node->y<<" ";
-  node *path_trace;
-    path_trace = new node;
-  while(true)
+   while(true)
   {
-    path_trace=destination_node->parent;
-    cout<<path_trace->x<<path_trace->y<<" ";
-    if((path_trace->x==s_x)&&(path_trace->y==s_y))
+    destination_node=destination_node->parent;
+    cout<<destination_node->x<<destination_node->y<<" ";
+    if((destination_node->x==s_x)&&(destination_node->y==s_y))
       goto plotted;
   }
   plotted:;
   cout<<endl;
+  node *path_node;
+  path_node=closed_nodes.back();
+   cv::Mat path_map = cv::Mat::zeros(height,width,CV_8UC3);
+   while(true)
+   {
+    int i_= height - path_node->x;//i=x,j=y;
+    path_map.at<Vec3b>(i_,path_node->y)[0] = 255;
+    path_map.at<Vec3b>(i_,path_node->y)[1] = 255;
+    path_map.at<Vec3b>(i_,path_node->y)[2] = 255;
+    path_node=path_node->parent;
+    if((path_node->x==s_x)&&(path_node->y==s_y))
+      goto over;
+  }
+   over:;
+   imshow("path_map",path_map);
+   cv::waitKey(1);
+
 }
 
 int main(int argc, char **argv)
@@ -202,7 +236,7 @@ int main(int argc, char **argv)
    * A count of how many messages we have sent. This is used to create
    * a unique string for each message.
    */
-   cout<<"1"<<endl;
+   //cout<<"1"<<endl;
     ros::NodeHandle n1;
     ros::Subscriber path_sub=n1.subscribe<nav_msgs::OccupancyGrid>("/scan/local_map",25,path_plan);
    //path_plan(obstacle_map,1,1,3,2);

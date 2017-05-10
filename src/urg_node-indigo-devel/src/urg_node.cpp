@@ -37,9 +37,8 @@ int main(int argc, char **argv)
 {
   // Initialize node and nodehandles
   ros::init(argc, argv, "urg_node");
-  std::cout<<"ch2";
+
   urg_node::UrgNode node;
-  std::cout<<"ch3";
   node.run();
 
   ros::spin();

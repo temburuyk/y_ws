@@ -79,7 +79,7 @@ main(int argc, char** argv)
   {
     fprintf(stderr,
         "usage: getID /dev/ttyACM? [quiet]\nOutputs the device ID of a hokuyo at /dev/ttyACM? or IP address"
-        " (specified as 192.168.0.10:10940). Add a second argument for script friendly output.\n");
+        " (specified as 192.168.1.6:10940). Add a second argument for script friendly output.\n");
     return 1;
   }
 
@@ -108,8 +108,8 @@ main(int argc, char** argv)
   bool publish_multiecho = false;
   int serial_baud = 115200;
   int ip_port = 10940;
-  std::string ip_address = "192.168.0.10";
-  std::string serial_port = "/dev/ttyACM0";
+  std::string ip_address = "";
+  std::string serial_port = "";
 
   std::vector<std::string> ip_split = split(argv[1], ':');
   if (ip_split.size() < 2)  // Not an IP address

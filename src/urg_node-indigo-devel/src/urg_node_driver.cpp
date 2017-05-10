@@ -69,7 +69,7 @@ void UrgNode::initSetup()
   // Initialize node and nodehandles
 
   // Get parameters so we can change these later.
-  pnh_.param<std::string>("ip_address", ip_address_, "192.168.0.10");
+  pnh_.param<std::string>("ip_address", ip_address_, "");
   pnh_.param<int>("ip_port", ip_port_, 10940);
   pnh_.param<std::string>("serial_port", serial_port_, "/dev/ttyACM0");
   pnh_.param<int>("serial_baud", serial_baud_, 115200);
